@@ -27,8 +27,3 @@ variable "availability_zones" {
   description = "List of availability zones"
   type        = list(string)
 }
-
-variable "tags" {
-  description = "Tags to assign to resources"
-  type        = map(string)
-}

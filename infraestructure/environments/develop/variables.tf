@@ -13,10 +13,10 @@ variable "instance_type" {
   type        = string
 }
 
-#variable "key_name" {
-#  description = "The name of the SSH key to use"
-#  type        = string
-#}
+variable "key_name" {
+  description = "The name of the SSH key to use"
+  type        = string
+}
 
 variable "primary_private_ip" {
   description = "Primary ENI private IP"
@@ -31,33 +31,33 @@ variable "trunk_private_ip" {
 variable "security_group_ids" {
   description = "List of security group IDs to associate with the instance"
   type        = list(string)
-  default     = ["sg-0123456789abcdef0"]  # Example default value
+  default     = ["sg-0123456789abcdef0"] # Example default value
 }
 
 variable "subnet_id" {
   description = "The subnet ID to launch the instance in"
   type        = string
-  default     = "subnet-0123456789abcdef0"  # Example default value
+  default     = "subnet-0123456789abcdef0" # Example default value
 }
 
 variable "tags" {
   description = "Tags to assign to the instance"
-  type = map(string)
+  type        = map(string)
 }
 
 variable "cidr_block" {
-  description = "The CIDR block for the VPC"
-  type        = string
+  # description = "The CIDR block for the VPC"
+  # type        = string
 }
 
 variable "public_subnet_cidrs" {
   description = "List of CIDR blocks for the public subnets"
-  type = list(string)
+  type        = list(string)
 }
 
 variable "private_subnet_cidrs" {
   description = "List of CIDR blocks for the private subnets"
-  type = list(string)
+  type        = list(string)
 }
 
 variable "public_subnet_count" {
@@ -72,5 +72,5 @@ variable "private_subnet_count" {
 
 variable "availability_zones" {
   description = "List of availability zones"
-  type = list(string)
+  type        = list(string)
 }

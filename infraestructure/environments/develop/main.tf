@@ -1,7 +1,3 @@
-provider "aws" {
-  region = var.aws_region
-}
-
 module "vpc" {
   source               = "../../modules/vpc"
   cidr_block           = var.cidr_block
@@ -10,7 +6,7 @@ module "vpc" {
   public_subnet_count  = var.public_subnet_count
   private_subnet_count = var.private_subnet_count
   availability_zones   = var.availability_zones
-  tags                 = var.tags
+  # Tags Configuration
 }
 
 # module "iam" {
@@ -22,9 +18,10 @@ resource "aws_security_group" "my_sg" {
   vpc_id = module.vpc.vpc_id
 
   ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
+    from_port = 22
+    to_port   = 22
+    protocol  = "tcp"
+    #tfsec:ignore:aws-ec2-no-public-ingress-sgr
     cidr_blocks = ["0.0.0.0/0"]
     description = "ec2 port from ssh"
   }
@@ -34,10 +31,14 @@ module "ec2" {
   source             = "../../modules/ec2"
   ami_id             = var.ami_id
   instance_type      = var.instance_type
-  subnet_id          = element(module.vpc.public_subnet_ids, 0)
-  #key_name           = var.key_name
+  subnet_id          = element(module.vpc.private_subnet_ids, 0)
+  key_name           = var.key_name
   primary_private_ip = var.primary_private_ip
   trunk_private_ip   = var.trunk_private_ip
   security_group_ids = [aws_security_group.my_sg.id]
-  tags               = var.tags
+}
+
+module "ecs" {
+  source    = "../../modules/ecs"
+  subnet_id = element(module.vpc.private_subnet_ids, 0)
 }

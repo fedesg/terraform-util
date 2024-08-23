@@ -13,10 +13,10 @@ variable "subnet_id" {
   type        = string
 }
 
-#variable "key_name" {
-#  description = "The name of the SSH key to use"
-#  type        = string
-#}
+variable "key_name" {
+  description = "The name of the SSH key to use"
+  type        = string
+}
 
 variable "primary_private_ip" {
   description = "Primary ENI private IP"
@@ -31,10 +31,4 @@ variable "trunk_private_ip" {
 variable "security_group_ids" {
   description = "List of security group IDs to associate with the instance"
   type        = list(string)
-}
-
-variable "tags" {
-  description = "Tags to assign to the instance"
-  type        = map(string)
-  default     = {}
 }

@@ -13,7 +13,7 @@ output "trunk_network_interface_id" {
   value       = aws_network_interface.trunk.id
 }
 
-#output "key_name" {
-#  description = "The name of the key pair used for the EC2 instance"
-#  value       = aws_instance.this.key_name
-#}
+output "key_name" {
+  description = "The name of the key pair used for the EC2 instance"
+  value       = aws_instance.this.key_name
+}
