@@ -1,18 +1,22 @@
 # AWS Region Configuration
 aws_region = "us-east-1"
 
+# Environment Configuration
+env_short                             = "dev"
+env_tag                               = "development"
+env_ecs_task_requires_compatibilities = "EC2"
+
+# Organization and Account Configuration
+org_account = "825765408764"
+
 # EC2 Instance Configuration
-// Linux
-ami_id = "ami-02c21308fed24a8ab"
-// Microsoft Windows Server 2022 Base
-#ami_id        = "ami-07cc1bbe145f35b58"
+ami_id = "ami-02c21308fed24a8ab" # Linux AMI
+# ami_id     = "ami-07cc1bbe145f35b58" # Windows Server AMI (Commented)
 instance_type = "t3.micro"
-#key_name      = "my-ssh-key"
 
 # Networking Configuration
 primary_private_ip = "10.0.4.100"
 trunk_private_ip   = "10.0.4.101"
-#security_group_ids = ["sg-0123456789abcdef0"]
 
 # VPC Configuration
 cidr_block           = "10.0.0.0/16"
@@ -22,18 +26,16 @@ public_subnet_count  = 3
 private_subnet_count = 3
 availability_zones   = ["us-east-1a", "us-east-1b"]
 
-# Tags Configuration
-tags = {
-  "Name"                  = "VPC_DEVELOP"
-  "Environment"           = "Develop"
-  "Project"               = "Microservice"
-  "sisorg:service"        = "infra"
-  "sisorg:environment"    = "develop"
-  "sisorg:application"    = "Entry"
-  "sisorg:taggingVersion" = "1.0.0"
-  "sisorg:organization"   = "develop"
-  "sisorg:automated"      = "yes"
-}
-
+# Security Group Configuration
 security_group_ids = ["sg-0123456789abcdef0"]
-subnet_id          = "subnet-0123456789abcdef0"
+
+# Subnet Configuration
+subnet_id = "subnet-0123456789abcdef0"
+
+# Key Pair Configuration
+algorithm_type = "RSA"
+rsa_bits       = 4096
+key_pair_ec2   = "kp_ec2"
+
+
+

@@ -15,6 +15,13 @@ terraform {
 provider "aws" {
   region = "us-east-1"
   default_tags {
-    tags = var.tags
+    tags = {
+      "sisorg:service"        = "infra"
+      "sisorg:environment"    = "develop"
+      "sisorg:application"    = "Entry"
+      "sisorg:taggingVersion" = "1.0.0"
+      "sisorg:organization"   = "develop"
+      "sisorg:automated"      = "yes"
+    }
   }
 }

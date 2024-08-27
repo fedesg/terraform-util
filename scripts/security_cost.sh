@@ -8,9 +8,9 @@ NC='\033[0m' # No Color
 
 # Función para imprimir secciones
 print_section() {
-  echo -e "${YELLOW}================================================================================${NC}"
-  echo -e "${GREEN}$1${NC}"
-  echo -e "${YELLOW}================================================================================${NC}"
+  echo "${YELLOW}================================================================================${NC}"
+  echo "${GREEN}$1${NC}"
+  echo "${YELLOW}================================================================================${NC}"
 }
 
 # Ejecutar tfsec y capturar la salida
@@ -19,11 +19,11 @@ if command -v tfsec &>/dev/null; then
     tfsec_output=$(tfsec .)
     echo "$tfsec_output"
 else
-    echo -e "${RED}Error: tfsec no está instalado. Instálalo para continuar con esta evaluación.${NC}"
+    echo "${RED}Error: tfsec no está instalado. Instálalo para continuar con esta evaluación.${NC}"
 fi
 
 # Dejar espacio entre las salidas
-echo -e "\n\n"
+echo "\n\n"
 
 # Ejecutar infracost y capturar la salida
 print_section "Ejecutando infracost para estimar los costos de la infraestructura de Terraform"
@@ -31,6 +31,6 @@ if command -v infracost &>/dev/null; then
     infracost_output=$(infracost breakdown --path=. --format table)
     echo "$infracost_output"
 else
-    echo -e "${RED}Error: infracost no está instalado. Instálalo para continuar con esta estimación.${NC}"
+    echo "${RED}Error: infracost no está instalado. Instálalo para continuar con esta estimación.${NC}"
 fi
 

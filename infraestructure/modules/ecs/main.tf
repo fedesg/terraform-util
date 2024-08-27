@@ -1,11 +1,27 @@
-resource "aws_ecs_cluster" "example" {
-  name = "example-cluster"
+# Creates an ECS Cluster with the specified name and tags.
+resource "aws_ecs_cluster" "sisorg_cluster" {
+  name = var.ecs_cluster_name # Name of the ECS Cluster.
+
+  # Tags assigned to the ECS Cluster for identification and management.
+  tags = {
+    "movilcash:service"        = "Core"          # Service category.
+    "movilcash:environment"    = var.env_short   # Environment name.
+    "movilcash:application"    = "ECS"           # Application type.
+    "movilcash:taggingVersion" = "1.0.0"         # Tagging version.
+    "movilcash:organization"   = var.org_account # Organization account.
+    "movilcash:automated"      = "yes"           # Indicates automation.
+  }
 }
 
-resource "aws_ecs_task_definition" "example" {
-  family                   = "example-task"
-  network_mode             = "awsvpc"
-  container_definitions    = <<DEFINITION
+# Defines an ECS Task Definition for the ECS Cluster.
+resource "aws_ecs_task_definition" "main_task" {
+  family             = "example-task"             # Family name of the task definition.
+  network_mode       = "awsvpc"                   # Network mode set to AWSVPC for ENI trunking.
+  execution_role_arn = var.ecs_task_exec_role_arn # IAM role ARN for task execution.
+  task_role_arn      = var.ecs_task_exec_role_arn # IAM role ARN for the task.
+
+  # Container definitions for the task.
+  container_definitions = <<DEFINITION
 [
   {
     "name": "my-container",
@@ -21,45 +37,25 @@ resource "aws_ecs_task_definition" "example" {
   }
 ]
 DEFINITION
-  requires_compatibilities = ["EC2"]
-  execution_role_arn       = aws_iam_role.ecs_task_exec_role.arn
-  task_role_arn            = aws_iam_role.ecs_task_exec_role.arn
-  cpu                      = "256"
-  memory                   = "512"
+
+  requires_compatibilities = ["EC2"] # Specifies that the task will run on EC2 instances.
+  cpu                      = "256"   # CPU units for the task.
+  memory                   = "512"   # Memory for the task.
 }
 
+# Creates an ECS Service to manage tasks in the cluster.
+resource "aws_ecs_service" "example_service" {
+  name            = "example-service"                     # Name of the ECS Service.
+  cluster         = aws_ecs_cluster.sisorg_cluster.id     # ECS Cluster to deploy the service in.
+  task_definition = aws_ecs_task_definition.main_task.arn # Task definition to use for the service.
+  desired_count   = 2                                     # Number of tasks to run.
 
-resource "aws_ecs_service" "example" {
-  name            = "example-service"
-  cluster         = aws_ecs_cluster.example.id
-  task_definition = aws_ecs_task_definition.example.arn
-  desired_count   = 2
-
+  # Configures network settings for the ECS tasks.
   network_configuration {
-    subnets          = [var.subnet_id]
-    security_groups  = [aws_security_group.example.id]
-    assign_public_ip = true
+    subnets         = [var.subnet_id]         # Subnet IDs where the tasks will be launched.
+    security_groups = [var.security_group_id] # Security group IDs associated with the tasks.
   }
 
-  launch_type = "FARGATE"
+  launch_type = "EC2" # Launch type set to EC2, which supports ENI trunking.
 }
 
-
-resource "aws_iam_role" "ecs_task_exec_role" {
-  name = "ecsTaskExecutionRole"
-
-  assume_role_policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "ecs-tasks.amazonaws.com"
-      }
-    }
-  ]
-}
-POLICY
-}
